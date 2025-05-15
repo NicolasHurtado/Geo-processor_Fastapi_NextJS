@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "backend-python"
+version = "0.1.0"
+description = "FastAPI service for geospatial processing."
+authors = ["Nicolas Hurley <nicolashurtado0712@gmail.com>"] 
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = ">=0.100.0"
+uvicorn = {extras = ["standard"], version = ">=0.20.0"}
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.0"
+pytest-cov = "^4.0"
+httpx = "^0.28.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api" 

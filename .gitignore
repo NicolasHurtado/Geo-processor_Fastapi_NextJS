@@ -1,0 +1,67 @@
+# Python virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Python virtual environments
+venv/
+.venv/
+ENV/
+env/
+ENV.bak/
+env.bak/
+
+# Poetry
+.poetry/
+poetry.lock.b~
+
+# Pytest
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Python build and distribution files
+build/
+dist/
+*.egg-info/
+*.egg
+*.gitkeep*
+
+# Logs
+logs/
+*.log
+
+# SQLite databases
+*.sqlite3
+*.db
+
+# Environment variables (¡IMPORTANT!)
+.env
+.env.*
+!.env.example
+
+# Operating system specific files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Node.js (preparing for NestJS and Next.js)
+node_modules/
+npm-debug.log
+yarn-error.log
+coverage/
+
+# Next.js specific files
+.next/
+out/
+
+# NestJS specific files
+dist/ # (Also used by Python, but common in NestJS for TypeScript transpilation) 
