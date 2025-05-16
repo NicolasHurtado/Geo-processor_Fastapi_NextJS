@@ -1,8 +1,6 @@
 from fastapi import APIRouter, HTTPException, Body
-from fastapi.responses import JSONResponse
-from typing import List
 import logging
-from ..schemas import ProcessRequest, ProcessResponse, Point
+from ..schemas import ProcessRequest, ProcessResponse
 from ..services import calculate_bounds_and_centroid
 
 router = APIRouter()

@@ -1,6 +1,7 @@
 import pytest
 from fastapi.testclient import TestClient
 from app.main import app # Asegúrate de que app.main importa tu instancia de FastAPI
+from typing import Dict, Any
 
 @pytest.fixture(scope="module") # scope="module" para que el cliente se cree una vez por módulo de prueba
 def client():
@@ -18,7 +19,7 @@ def test_read_root(client: TestClient):
 class TestProcessEndpoint:
     
     def test_process_points_valid(self, client: TestClient):
-        payload = {
+        payload: Dict[str, Any] = {
             "points": [
                 {"lat": 40.7128, "lng": -74.0060},
                 {"lat": 34.0522, "lng": -118.2437}
@@ -37,21 +38,21 @@ class TestProcessEndpoint:
         assert pytest.approx(data["centroid"]["lng"]) == (-74.0060 + -118.2437) / 2
 
     def test_process_points_empty_list(self, client: TestClient):
-        payload = {"points": []}
+        payload: Dict[str, Any] = {"points": []}
         response = client.post("/process", json=payload)
         assert response.status_code == 400
         data = response.json()
         assert "detail" in data
 
     def test_process_points_missing_points_field(self, client: TestClient):
-        payload = {}
+        payload: Dict[str, Any] = {}
         response = client.post("/process", json=payload)
         assert response.status_code == 400
         data = response.json()
         assert "detail" in data
 
     def test_process_points_invalid_lat_lng_type(self, client: TestClient):
-        payload = {
+        payload: Dict[str, Any] = {
             "points": [
                 {"lat": "not-a-float", "lng": -74.0060}
             ]
@@ -62,7 +63,7 @@ class TestProcessEndpoint:
         assert "detail" in data
 
     def test_process_points_lat_out_of_range(self, client: TestClient):
-        payload = {
+        payload: Dict[str, Any] = {
             "points": [
                 {"lat": 91.0, "lng": -74.0060}
             ]
@@ -73,7 +74,7 @@ class TestProcessEndpoint:
         assert "detail" in data
 
     def test_process_points_lng_out_of_range(self, client: TestClient):
-        payload = {
+        payload: Dict[str, Any] = {
             "points": [
                 {"lat": 40.0, "lng": -181.0}
             ]

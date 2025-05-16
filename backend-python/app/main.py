@@ -1,8 +1,7 @@
 import logging
-from fastapi import FastAPI, Request, HTTPException
+from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
-from starlette.exceptions import HTTPException as StarletteHTTPException
 from .routers import process
 
 # Basic logging configuration
@@ -32,7 +31,9 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     
     # Logging the error can also be useful
     logger = logging.getLogger(__name__)
-    logger.warning(f"Validation error (400): {error_messages} - From: {request.client.host} - Payload: {await request.body()}")
+    client_host = request.client.host if request.client else "Unknown"
+    request_body = await request.body()
+    logger.warning(f"Validation error (400): {error_messages} - From: {client_host} - Payload: {request_body.decode('utf-8', errors='replace')}")
     
     return JSONResponse(
         status_code=400,

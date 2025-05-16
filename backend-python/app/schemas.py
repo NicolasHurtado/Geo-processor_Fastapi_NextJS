@@ -5,7 +5,7 @@ This file defines the data schemas for the FastAPI application.
 - `ProcessRequest`: Represents a request to process a list of points.
 - `ProcessResponse`: Represents a response that contains the centroid and bounds of a set of points.
 """
-from typing import List, Optional
+from typing import List
 from pydantic import BaseModel, Field, validator
 
 class Point(BaseModel):
@@ -13,7 +13,7 @@ class Point(BaseModel):
     lng: float = Field(..., ge=-180, le=180, description="Longitude of the point")
 
 class ProcessRequest(BaseModel):
-    points: List[Point] = Field(..., min_items=1, description="List of points to process")
+    points: List[Point] = Field(..., min_length=1, description="List of points to process")
 
     @validator('points')
     def points_must_not_be_empty(cls, v):
