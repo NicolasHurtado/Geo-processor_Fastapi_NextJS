@@ -5,9 +5,33 @@ services:
     build:
       context: ./backend-python
       dockerfile: Dockerfile
+    container_name: backend-python
     ports:
       - "8000:8000"
     volumes:
-      - ./backend-python:/app  # Mapeo para desarrollo en caliente
+      - ./backend-python:/app # Only for development hot code
     environment:
-      - PYTHONUNBUFFERED=1 # Para que los logs de Python aparezcan inmediatamente 
+      - PYTHONUNBUFFERED=1
+    networks:
+      - geo_network
+
+  api-nestjs:
+    build:
+      context: ./api-nestjs
+      dockerfile: Dockerfile
+    container_name: api-nestjs
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./api-nestjs/src:/usr/src/app/src # Only for development hot code
+    env_file:
+      - ./api-nestjs/.env
+
+    depends_on:
+      - backend-python
+    networks:
+      - geo_network
+
+networks:
+  geo_network:
+    driver: bridge
