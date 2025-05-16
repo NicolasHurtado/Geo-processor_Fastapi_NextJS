@@ -1,17 +1,21 @@
-import { Controller, Post, Body, UseInterceptors, HttpCode } from '@nestjs/common';
-import { CacheInterceptor } from '@nestjs/cache-manager';
+import { Controller, Post, Body, Logger } from '@nestjs/common';
 import { GeoService } from './geo.service';
 import { ProcessRequestDto } from './dto/process-request.dto';
 import { ProcessResponseDto } from './dto/process-response.dto';
 
 @Controller('geo')
 export class GeoController {
+  private readonly logger = new Logger(GeoController.name);
+
   constructor(private readonly geoService: GeoService) {}
 
   @Post('process')
-  @HttpCode(200) // By default is 201 for POST, but we change it to 200
-  @UseInterceptors(CacheInterceptor) // Use the NestJS cache interceptor
-  async processPoints(@Body() processRequestDto: ProcessRequestDto): Promise<ProcessResponseDto> {
+  async processPoints(
+    @Body() processRequestDto: ProcessRequestDto,
+  ): Promise<ProcessResponseDto> {
+    this.logger.log(
+      `Received request for /geo/process: ${processRequestDto.points.length} points`,
+    );
     return this.geoService.processCoordinates(processRequestDto);
   }
 }

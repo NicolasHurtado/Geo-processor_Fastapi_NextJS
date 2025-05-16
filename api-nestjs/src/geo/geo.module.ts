@@ -18,4 +18,4 @@ import { CacheModule } from '@nestjs/cache-manager';
   controllers: [GeoController],
   providers: [GeoService],
 })
-export class GeoModule {} 
+export class GeoModule {}

@@ -1,9 +1,17 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // Habilitar CORS
+  app.enableCors({
+    origin: 'http://localhost:3000',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  });
 
   // Enable ValidationPipe globally
   app.useGlobalPipes(
@@ -17,8 +25,12 @@ async function bootstrap() {
     }),
   );
 
-  const port = process.env.PORT || 3001;
+  const configService = app.get(ConfigService);
+  const port = configService.get<number>('PORT') || 3001;
   await app.listen(port);
-  console.log(`Application is running on: ${await app.getUrl()}`);
+  console.log(`API Gateway listening on port ${port}`);
 }
-bootstrap(); 
+bootstrap().catch((err) => {
+  console.error('Error bootstrapping the application:', err);
+  process.exit(1);
+});

@@ -11,4 +11,4 @@ export class ProcessResponseDto {
   @ValidateNested()
   @Type(() => BoundsDto)
   bounds: BoundsDto;
-} 
+}

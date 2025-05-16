@@ -10,4 +10,4 @@ export class PointDto {
   @IsNumber({}, { message: 'The longitude must be a number.' })
   @IsLongitude({ message: 'The longitude must be a valid coordinate.' })
   lng: number;
-} 
+}

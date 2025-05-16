@@ -3,4 +3,4 @@ export class BoundsDto {
   south: number;
   east: number;
   west: number;
-} 
+}
