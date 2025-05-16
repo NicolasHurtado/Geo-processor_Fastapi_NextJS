@@ -14,6 +14,12 @@ services:
       - PYTHONUNBUFFERED=1
     networks:
       - geo_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
 
   api-nestjs:
     build:
@@ -23,12 +29,38 @@ services:
     ports:
       - "3001:3001"
     volumes:
-      - ./api-nestjs/src:/usr/src/app/src # Only for development hot code
+      - ./api-nestjs/src:/app/src # Only for development hot code
     env_file:
       - ./api-nestjs/.env
-
     depends_on:
       - backend-python
+    networks:
+      - geo_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
+  frontend-nextjs:
+    build:
+      context: ./frontend-nextjs
+      dockerfile: Dockerfile
+    container_name: frontend-nextjs
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend-nextjs:/app # Only for development hot code
+      - /app/node_modules
+      - /app/.next 
+    env_file:
+      - ./frontend-nextjs/.env
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    depends_on:
+      - api-nestjs
     networks:
       - geo_network
 
