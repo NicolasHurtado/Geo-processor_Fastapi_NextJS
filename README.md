@@ -2,6 +2,9 @@
 
 This project implements a microservice ecosystem designed to process sets of geographical coordinates. The system calculates the boundaries (North, South, East, West) and the centroid of these points, then allows their visualization on a web interface.
 
+![image](https://github.com/user-attachments/assets/0a642f54-9ce3-46ef-87da-1153ab5d9aa1)
+
+
 ## System Architecture
 
 The system follows a distributed microservice architecture, orchestrated with Docker Compose, and consists of the following main components:
