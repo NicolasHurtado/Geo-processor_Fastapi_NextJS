@@ -1,11 +1,12 @@
 'use client'; // Directiva para componentes de cliente en App Router
 
 import { useState, FormEvent } from 'react';
-import dynamic from 'next/dynamic'; // Importar dynamic
-import { Point, ProcessRequest, ProcessResponse } from '../types/geo'; // Corregido
+import dynamic from 'next/dynamic';
+import { Point, ProcessRequest, ProcessResponse } from '../types/geo';
 import PointsForm from '../components/PointsForm';
 import ResultsDisplay from '../components/ResultsDisplay';
 import ErrorAlert from '../components/ErrorAlert';
+import { processCoordinates } from '../services/geoService'; 
 
 // Dynamic loading for the map component
 const MapDisplay = dynamic(() => import('../components/MapDisplay'), {
@@ -56,8 +57,7 @@ export default function HomePage() {
     event.preventDefault();
     setIsLoading(true);
     setError(null);
-    // Don't clean the result here to avoid the map disappearing immediately
-    // setResult(null);
+    // setResult(null); // Optional: clean previous results
 
     const numericPoints = points.map(p => ({
       lat: parseFloat(p.lat as string),
@@ -79,7 +79,6 @@ export default function HomePage() {
 
     const payload: ProcessRequest = { points: numericPoints };
 
-    // Use the environment variable for the API URL
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     if (!apiUrl) {
       setError('The API URL is not configured. Please check the environment variables.');
@@ -89,31 +88,14 @@ export default function HomePage() {
     }
 
     try {
-      const response = await fetch(apiUrl, { 
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        const errorMessage = data.message || `Error: ${response.status} ${response.statusText}`;
-        setResult(null);
-        throw new Error(Array.isArray(errorMessage) ? errorMessage.join(', ') : errorMessage);
-      }
-      
-      setResult(data as ProcessResponse);
+      const apiResult = await processCoordinates(apiUrl, payload);
+      setResult(apiResult);
     } catch (err: unknown) {
       let message = 'An error occurred while processing the request.';
       if (err instanceof Error) {
         message = err.message;
       } else if (typeof err === 'string') {
         message = err;
-      } else if (typeof err === 'object' && err !== null && 'message' in err && typeof (err as { message?: unknown }).message === 'string') {
-        message = (err as { message: string }).message;
       }
       setError(message);
       setResult(null);

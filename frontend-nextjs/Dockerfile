@@ -1,12 +1,13 @@
-FROM node:20-alpine
+FROM node:20
 
 WORKDIR /app
-
-
 
 COPY package.json package-lock.json* ./
 
 RUN npm install
+
+# Install Playwright browsers
+RUN npx playwright install --with-deps
 
 COPY . .
 
